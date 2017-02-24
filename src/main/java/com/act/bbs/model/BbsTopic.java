@@ -1,8 +1,6 @@
 package com.act.bbs.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /*
@@ -24,7 +22,9 @@ public class BbsTopic {
 	private Integer userId ;
 	private String content ;
 	private Date createTime ;
+	@OneToOne
 	private BbsUser user;
+	@OneToOne
 	private BbsModule module;
 
 	public Integer getId() {

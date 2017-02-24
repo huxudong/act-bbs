@@ -1,0 +1,65 @@
+@extends(common.layout)
+@import com.act.bbs.model.*;
+@import com.avaje.ebean.*;
+@args BbsTopic topic,Boolean isAdmin,PagedList<BbsReply> page
+<h3>主题：@topic.getContent()</h3>
+    @for(BbsPost post : page.getList()){
+        <div class="panel panel-default" data-post="${post.id}">
+            <div class="panel-heading">
+                <span class="label label-primary">@post.getUser().getUserName()</span>
+                <span class="label label-default">@post.getCreateTime().format("yyyy年MM月dd日")</span>
+
+
+            </div>
+            <div class="panel-body">@post.getContent().raw()</div>
+            @if(post.getReplys().size()>0){
+            <ul class="list-group">
+                @for(BbsReply reply : post.getReplys()){
+                <li class="list-group-item">
+                    <span class="text-info">@reply.getUser().getUserName()</span>
+                </li>
+                @}
+            </ul>
+            @}
+        </div>
+    @}
+
+
+
+<div class="modal fade" id="reply-dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form class="form-search" action="${ctxPath}/bbs/reply/save" onsubmit="return ajaxSubmit(this,'reload')" >
+                    <input type="hidden" name="postId" value="${post.id!}"/>
+                    <input type="hidden" name="topicId" value="${topic.id!}"/>
+                    <div class="form-group">
+                        <textarea placeholder="请输入回复内容" class="form-control" name="content" style="height:100px;resize:none;" maxlength="100"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">确定提交</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<style>.panel-body img{max-width:100% !important;height:auto !important}</style>
+<link href="//cdn.bootcss.com/highlight.js/9.8.0/styles/github-gist.min.css" rel="stylesheet">
+<script src="//cdn.bootcss.com/highlight.js/9.8.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+    function showReplyDialog(postid,topicid){
+        var dialog = $('#reply-dialog').modal('show');
+        dialog.find('textarea').val('')
+        dialog.find('[name=postId]').val(postid);
+        dialog.find('[name=topicId]').val(topicid);
+    }
+
+    function deletePost(el){
+        var p = $(el).parents('.panel-default[data-post]');
+        $.confirm('确定要删除该内容吗？',function(e){
+            e&&$.post('${ctxPath}/bbs/admin/post/delete/'+p.data('post'),function(json){
+                json.err?$.alert(json.msg):p.remove();
+            })
+        })
+    }
+</script>

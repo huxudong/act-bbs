@@ -1,0 +1,78 @@
+@extends(common.layout)
+@import com.act.bbs.model.*;
+@import com.avaje.ebean.*;
+@args String pagename ,String _test,PagedList<BbsTopic> page,Boolean isAdmin
+<style>
+    .topic{position:relative;width: 100%;overflow: hidden;padding: 10px 0;border-top: 1px solid #ddd}
+    .topic>div{float: left;}
+    .topic .div1{width: 50px;height: 40px;text-align: center;background-color: #009a61;color: #fff;}
+    .topic .div1>div:first-child,.topic .div2>div:first-child{line-height: 25px;height: 25px;}
+    .topic .div1>div:last-child,.topic .div2>div:last-child{font-size: 12px;line-height: 10px;height: 10px;}
+    .topic .div2{width: 75px;height: 40px;text-align: center;color: #999}
+    .topic .div3{width: calc(100% - 125px);}
+    .topic .div3>div:first-child{color: #999;font-size: 13px;margin-bottom: 3px;}
+    .topic a{color: #000;}
+    .topic .div3>div:last-child a:last-child{font-size: 12px;padding: 0 6px;display: inline-block;height: 20px;line-height: 20px;color: #017E66;background: #EBF5F3;text-decoration: none;}
+    .topic .div3>div:last-child a:last-child:hover{background: #017E66;color: #fff}
+    .topic .div3>div:last-child a:first-child{font-size: 15px;}
+    .topic .div4{position: absolute;top:10px;right: 0px;}
+</style>
+<h4>@pagename</h4>
+<div id="post-list">
+    @for(BbsTopic topic : page.getList()){
+    <div class="topic">
+        <div class="div1">
+            <div>@topic.getPostCount()</div>
+            <div>回答</div>
+        </div>
+        <div class="div2">
+            <div>@topic.getPv()</div>
+            <div>浏览</div>
+        </div>
+        <div class="div3">
+            <div>
+                @if(topic.getIsUp()>0){
+                <span class="label label-danger">重要</span>
+                }
+                @if(topic.getIsNice()>0){
+                <span class="label label-warning ">精品</span>
+                }
+                <a href="javascript:;">
+                    @topic.getUser().getUserName()
+                </a>
+                &nbsp;&nbsp;@topic.getCreateTime().format("yyyy年MM月dd日") </div>
+            <div>
+                <a href="bbs/topic/@topic.getId()/1">@topic.getContent()</a>&nbsp;&nbsp;<a href="topic/module/@topic.getModuleId()-1">@topic.getModule().getName();
+            </a>
+            </div>
+        </div>
+        @if(isAdmin){
+        <div class="div4" data-topic=${topic.id}>
+            <a href="javascript:;"  class="btn btn-default btn-xs nice-btn">精华</a>
+            <a href="javascript:;"  class="btn btn-default btn-xs top-btn">置顶</a>
+            <a href="javascript:;"  class="btn btn-default btn-xs del-btn">删除</a>
+        </div>
+        }
+    </div>
+    }
+    @include(common.page)
+    @total(page)
+</div>
+<script>
+    $('#post-list').on('click','.nice-btn',function(){
+        $.post('static/bbs/admin/topic/nice/'+$(this).parents('tr').data('topic'),function(json){
+            json.err||location.reload();
+        })
+    }).on('click','.top-btn',function(){
+        $.post('static/bbs/admin/topic/up/'+$(this).parents('tr').data('topic'),function(json){
+            json.err||location.reload();
+        })
+    }).on('click','.del-btn',function(){
+        var topicid = $(this).parents('tr').data('topic');
+        $.confirm('确定要删除该主题么？',function(e){
+            e&&$.post('/bbs/admin/topic/delete/'+topicid,function(json){
+                json.err||location.reload();
+            })
+        })
+    })
+</script>

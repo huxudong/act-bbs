@@ -1,8 +1,6 @@
 package com.act.bbs.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
@@ -21,8 +19,12 @@ public class BbsPost {
 	private String content ;
 	private Date createTime ;
 	private Date updateTime ;
-	
-	
+
+	@OneToOne
+	private BbsUser user;
+
+	@OneToMany(cascade=CascadeType.ALL)
+	@JoinColumn(name="post_id")
 	private List<BbsReply> replys ;
 
 	public Integer getId() {
@@ -91,5 +93,11 @@ public class BbsPost {
 		this.replys = replys;
 	}
 
-	
+	public BbsUser getUser() {
+		return user;
+	}
+
+	public void setUser(BbsUser user) {
+		this.user = user;
+	}
 }

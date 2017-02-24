@@ -9,7 +9,7 @@ import javax.persistence.Table;
 * gen by beetlsql 2016-04-27
 */
 @Entity
-@Table(name="user")
+@Table(name="bbs_user")
 public class BbsUser {
 	@Id
 	private Integer id ;

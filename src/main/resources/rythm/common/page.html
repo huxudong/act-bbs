@@ -1,0 +1,48 @@
+@import com.avaje.ebean.*;
+@import com.act.bbs.util.*;
+@def total (PagedList query) {
+<nav>
+
+    <ul class="pagination">
+        <!--小于10页直接全部输出-->
+        @if(query.getTotalPageCount()<=5){
+            @for(int i = 1 ; i < query.getTotalPageCount()+1; ++i ){
+                    @{
+                        String url = PageUtils.pageUrlPattern(_action.req(),i);
+                    }
+                    <li class="@if(i==query.getPageIndex()+1){active}"><a href="@url">@i</a></li>
+            }
+
+        }else{
+            @{
+                int maxdiff = query.getTotalPageCount()-query.getPageIndex();
+                int start = query.getPageIndex()<=4?1:maxdiff<=3?(query.getTotalPageCount() - 7):(query.getPageIndex()-3);
+                int end = query.getPageIndex()<=4?7:maxdiff<=3?query.getTotalPageCount():(query.getPageIndex()+3);
+            }
+            @if(start>1){
+                @{
+                    String url = PageUtils.pageUrlPattern(_action.req(),1);
+                }
+                <li><a href="@url">首页</a></li>
+                <li class="disabled"><a href="javascript:;">···</a></li>
+            }
+
+            @for(int i = start ; i < end+1 ; i++){
+                @{
+                    String url = PageUtils.pageUrlPattern(_action.req(),i);
+                }
+                <li class="@if(i==query.getPageIndex()+1){active}"><a href="@url">@i</a></li>
+            }
+
+            @if(end<query.getTotalPageCount()){
+                @{
+                    String url = PageUtils.pageUrlPattern(_action.req(),query.getTotalPageCount());
+                }
+                <li class="disabled"><a href="javascript:;">···</a></li>
+                <li><a href="@url">尾页</a></li>
+            }
+        }
+    </ul>
+</nav>
+
+}

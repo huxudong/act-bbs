@@ -1,9 +1,7 @@
 package com.act.bbs.model;
 
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -19,7 +17,9 @@ public class BbsReply {
 	private Integer userId ;
 	private String content ;
 	private Date createTime ;
+	@OneToOne
 	private BbsUser user;
+	@OneToOne
 	private BbsTopic topic;
 
 
