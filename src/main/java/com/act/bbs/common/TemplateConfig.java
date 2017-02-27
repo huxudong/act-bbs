@@ -31,7 +31,7 @@ public class TemplateConfig extends ImplicitVariableProvider {
                 public Object eval(ActionContext context) {
                     Locale locale = context.locale();
                     locale = Locale.getDefault();
-                    return locale.toString().replace('_', '-');
+                    return "aaaa";
                 }
             },
             new ActionViewVarDef("_test", String.class) {

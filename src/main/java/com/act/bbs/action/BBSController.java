@@ -1,5 +1,6 @@
 package com.act.bbs.action;
 
+import act.app.conf.AutoConfig;
 import act.controller.Controller;
 import act.db.ebean.EbeanDao;
 import com.act.bbs.model.BbsPost;
@@ -16,6 +17,7 @@ import javax.inject.Inject;
  * Created by huxudong on 17/2/7.
  */
 @Controller
+@AutoConfig
 public class BBSController extends Controller.Util {
 
     @Inject
@@ -27,10 +29,7 @@ public class BBSController extends Controller.Util {
     @Inject
     private EbeanDao<Integer, BbsPost> postDao;
 
-
-
-
-
+    private static String PAGENAME;
 
     /**
      * index
@@ -54,7 +53,7 @@ public class BBSController extends Controller.Util {
             keyword = "";
         }
         PagedList<BbsTopic> page = topicDao.createQuery().offset(offset).limit(limit).where().like("content","%"+keyword+"%").findPagedList();
-        String pagename = "首页综合";
+        String pagename = PAGENAME;
         boolean isAdmin = true;
         return render(isAdmin,pagename,page);
     }
@@ -77,5 +76,14 @@ public class BBSController extends Controller.Util {
         return render(list);
     }
 
+    @GetAction("/bbs/topic/post")
+    public Result post(){
+        return render();
+    }
+
+    @GetAction("/qrcode")
+    public void showQrcode(String content){
+        qrcode(content);
+    }
 
 }

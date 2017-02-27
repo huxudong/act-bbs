@@ -5,6 +5,7 @@ import act.db.ebean.EbeanDao;
 import com.act.bbs.model.BbsUser;
 import com.act.bbs.util.HashKit;
 import com.act.bbs.util.PageUtils;
+import com.act.bbs.util.VerifyCodeUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
@@ -60,18 +61,20 @@ public class UserController extends Controller.Util {
     }
 
     @PostAction("/user/doRegister")
-    public JSONObject register(BbsUser user,String code){
+    public JSONObject register(BbsUser user,String code,String userName,String password,String email){
+        user = new BbsUser();
         JSONObject result  = new JSONObject();
         result.put("err", 1);
-
         String verCode = session.get(CODE_NAME);
         if(!verCode.equalsIgnoreCase(code)){
             result.put("msg", "验证码输入错误");
-        }else if(userDao.findBy("userName",user.getUserName())!=null){
+        }else if(userDao.findOneBy("userName",userName)!=null){
             result.put("msg", "用户已经存在");
         }else{
-            String password = HashKit.md5(user.getPassword());
+            password = HashKit.md5(password);
+            user.setUserName(userName);
             user.setPassword(password);
+            user.setEmail(email);
             user.setBalance(10);
             user.setLevel(1);
             user.setScore(10);
@@ -81,7 +84,7 @@ public class UserController extends Controller.Util {
             session.put("score",user.getScore());
             session.put("level", PageUtils.getLevelName(user.getLevel()));
             result.put("err", 0);
-            result.put("msg", "/bbs/index");
+            result.put("msg", "/");
         }
         return result;
     }
@@ -90,10 +93,11 @@ public class UserController extends Controller.Util {
     public void authImage() throws IOException {
 //        H.Response response = ActionContext.current().resp();
 //        //生成随机字串
-//        String verifyCode = VerifyCodeUtils.generateVerifyCode(4);
+        String verifyCode = VerifyCodeUtils.generateVerifyCode(4);
+        System.out.println(verifyCode);
 //        //删除以前的
-//        session.remove(CODE_NAME);
-//        session.put(CODE_NAME, verifyCode.toLowerCase());
+        session.remove(CODE_NAME);
+        session.put(CODE_NAME, verifyCode.toLowerCase());
 //        //生成图片
 //        int w = 100, h = 30;
 //        VerifyCodeUtils.outputImage(w, h, response.outputStream(), verifyCode);
