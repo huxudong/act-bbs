@@ -1,5 +1,6 @@
 package com.act.bbs.action;
 
+import act.app.ActionContext;
 import act.controller.Controller;
 import act.db.ebean.EbeanDao;
 import com.act.bbs.model.BbsUser;
@@ -91,7 +92,7 @@ public class UserController extends Controller.Util {
 
     @GetAction("/user/authImage")
     public void authImage() throws IOException {
-//        H.Response response = ActionContext.current().resp();
+        H.Response response = ActionContext.current().resp();
 //        //生成随机字串
         String verifyCode = VerifyCodeUtils.generateVerifyCode(4);
         System.out.println(verifyCode);
@@ -99,8 +100,8 @@ public class UserController extends Controller.Util {
         session.remove(CODE_NAME);
         session.put(CODE_NAME, verifyCode.toLowerCase());
 //        //生成图片
-//        int w = 100, h = 30;
-//        VerifyCodeUtils.outputImage(w, h, response.outputStream(), verifyCode);
+        int w = 100, h = 30;
+        VerifyCodeUtils.outputImage(w, h, response.outputStream(), verifyCode);
 
     }
 }
