@@ -1,0 +1,27 @@
+@extends(common.layout)
+<form action="/bbs/topic/save" method="post" id="post-form" onsubmit="return ajaxSubmit(this)">
+	<fieldset>
+		<legend>发表主题</legend>
+		<div class="form-group">
+			<div class="row">
+				<div class="col-sm-4">
+					<select class="form-control" name="moduleId">
+						@for(BbsModule module : moduleList){
+							<option value="@module.getId()">@module.getName()</option>
+						}
+					</select>
+				</div>
+				<div class="col-sm-8">
+					<input type="text" class="form-control " name="title" placeholder="请输入主题标题">
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<textarea id="postContent" name="postContent" class="form-control"></textarea>
+		</div>
+		<div class="btn-group pull-right">
+			<button class="btn btn-sm btn-primary submit-btn" title="Send" type="submit"><i class="fa fa-check"></i> 提交</button>
+			<button class="btn btn-sm btn-default preview-btn" onclick="preview()" type="button"><i class="fa fa-eye"></i> 预览</button>
+		</div>
+	</fieldset>
+</form>
