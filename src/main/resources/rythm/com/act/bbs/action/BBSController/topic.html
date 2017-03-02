@@ -8,15 +8,26 @@
             <div class="panel-heading">
                 <span class="label label-primary">@post.getUser().getUserName()</span>
                 <span class="label label-default">@post.getCreateTime().format("yyyy年MM月dd日")</span>
-
-
+                <!--<span class="label label-default">@topic.getPv()</span>-->
+                @if(userName !=null){
+                <div class="btn-group btn-group-xs pull-right">
+                    @if(Integer.parseInt(userId) == post.getUser().getId()||isAdmin){
+                    <a class="btn btn-default" href="/bbs/admin/post/edit/@post.getId()"><i class="fa fa-edit"></i> 编辑</a>
+                    <a class="btn btn-default" href="javascript:;" onclick="deletePost(this)"><i class="fa fa-trash"></i> 删除</a>
+                    @}
+                    <a class="btn btn-default" href="javascript:;" onclick="showReplyDialog('$@post.getId()','@topic.getId()')"><i class="fa fa-reply"></i> 回复</a>
+                </div>
+                @}
             </div>
+
+
+
             <div class="panel-body">@post.getContent().raw()</div>
             @if(post.getReplys().size()>0){
             <ul class="list-group">
                 @for(BbsReply reply : post.getReplys()){
                 <li class="list-group-item">
-                    <span class="text-info">@reply.getUser().getUserName()</span>
+                    <span class="text-info">@reply.getUser().getUserName()</span><span class="text-muted">：@reply.getContent().raw()（@reply.getCreateTime().format("yyyy年MM月dd日")）</span>
                 </li>
                 @}
             </ul>

@@ -4,8 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ACT 论坛</title>
-    <meta name="keywords" content="Beetl,BeetlSql">
+    <link rel="icon" href="asset/act.png" type="image/x-icon" />
+    <meta name="keywords" content="ACT-FrameWork">
     <meta name="description" content="论坛模板">
+
     <!-- 	<link href="/css/bootstrap.min.css" rel="stylesheet"> -->
     <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -20,12 +22,7 @@
     </style>
 </head>
 <body>
-@{
-    String userName = _action.session().get("userName");
-    String userId = _action.session().get("userId");
-    String level = _action.session().get("level");
-    String score = _action.session().get("score");
-}
+
 
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
@@ -48,7 +45,9 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">板块 <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="/bbs/topic/module/${moudle.id}-1.html">模块</a></li>
+                        @for(BbsModule module : moduleList){
+                         <li><a href="/bbs/module/@module.getId()/1">@module.getName() </a></li>
+                        @}
                     </ul>
                 </li>
             </ul>
@@ -162,13 +161,42 @@
 
 
 <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+@if( userName!=null){
+<link rel="stylesheet" href="/asset/simditor/simditor.min.css" />
+<script src="//cdn.bootcss.com/marked/0.3.6/marked.min.js"></script>
+<script src="//cdn.bootcss.com/to-markdown/3.0.3/to-markdown.min.js"></script>
+<script type="text/javascript" src="/asset/simditor/simditor.min.js"></script>
+<script type="text/javascript">
+    var editor = new Simditor({
+        textarea: $('#postContent'),
+        defaultImage:'http://ibeetl.com/img/logo.png',
+        pasteImage:true,
+        cleanPaste:true,
+        toolbar:['title','bold','italic','underline','strikethrough','fontScale','color','ol','ul','blockquote','code','table','link','image','hr','indent','outdent','alignment','|','markdown'],
+        //按Beetl论坛的用处来看，暂时只需要如下几个语言（HTML、XML、json、java、javascript、markdown、sql）,如有需要再扩展
+        codeLanguages:[{name:'HTML,XML',value:'html'},{name:'JSON',value:'json'},{name:'Java',value:'java'},{name:'JavaScript',value:'js'},{name:'Markdown',value:'markdown'},{name:'SQL',value:'sql'}],
+        upload:{
+            url: '/asset/bbs/upload',
+            fileKey: 'editormd-image-file',
+            connectionCount: 3,
+            leaveConfirm: '上传正在进行中，确定要离开当前页面吗？'
+        }
+    });
+    function preview(){
+        var preWin = window.open('about:blank','preview');
+        preWin.document.write('<meta name="google" value="notranslate"><link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"><style>.panel img{max-width:100% !important;heightLauto !important;}.panel{margin-top:20px;}</style>');
+        preWin.document.write('<div class="container-fluid"><div class="row"><div class="col-sm-8 col-sm-offset-2"><div class="panel panel-default"><div class="panel-heading">内容提交预览</div><div class="panel-body">'+editor.sync()+'</div><div class="panel-footer"><a href="javascript:;" class="btn btn-link" onclick="window.close();">关闭预览</a></div></div></div></div></div>');
+        preWin.document.write('<link href="http://cdn.bootcss.com/highlight.js/9.8.0/styles/github-gist.min.css" rel="stylesheet"><script src="http://cdn.bootcss.com/highlight.js/9.8.0/highlight.min.js"></scr'+'ipt><script>hljs.initHighlightingOnLoad();</scr'+'ipt>');
+        preWin.document.close();
+    }
+</script>
+@}
 <script>
     //全局表单ajax提交(onsubmit="return ajaxSubmit(this,reload)")
     function ajaxSubmit(form,reload){
         form = $(form);
         $.post(form.attr('action'),form.serialize(),function(json){
-            json.err?$.alert(json.msg):reload?location.reload():location.replace(''+json.msg);
+            json.err?$.alert(json.msg):reload?location.reload():location.replace(json.msg);
         })
         return false;
     }
@@ -177,16 +205,26 @@
     $(function(){
         $('#serach-btn').on('click',function(){
             var keyword = $('#keyword').val().trim();
-            var url = location.href	;
-            if(url.indexOf('.html')!=-1){
-                url = url.substring(0,url.indexOf('.html')-1)+'1'+url.substring(url.indexOf('.html'),url.length);
-            }
-            if(url.indexOf('?')!=-1){
-                url = url.substring(0,url.indexOf('?'));
-            }
-            location.href = url+'?keyword='+keyword;
+            location.href = '/1?keyword='+keyword;
         })
+        $("#keyword").on('keydown',function (e) {
+            if (e.keyCode == 13) {
+                stopDefault(e);
+                $('#serach-btn').trigger('click');
+            }
+        });
     })
+    function stopDefault(e) {
+        //如果提供了事件对象，则这是一个非IE浏览器
+        if(e && e.preventDefault) {
+            //阻止默认浏览器动作(W3C)
+            e.preventDefault();
+        } else {
+            //IE中阻止函数器默认动作的方式
+            window.event.returnValue = false;
+        }
+        return false;
+    }
 </script>
 </body>
 </html>

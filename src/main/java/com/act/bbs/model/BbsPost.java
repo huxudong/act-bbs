@@ -15,7 +15,6 @@ public class BbsPost {
 	private Integer id ;
 	private Integer hasReply ;
 	private Integer topicId ;
-	private Integer userId ;
 	private String content ;
 	private Date createTime ;
 	private Date updateTime ;
@@ -49,14 +48,6 @@ public class BbsPost {
 
 	public void setTopicId(Integer topicId) {
 		this.topicId = topicId;
-	}
-
-	public Integer getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Integer userId) {
-		this.userId = userId;
 	}
 
 	public String getContent() {

@@ -1,8 +1,6 @@
 @extends(common.layout)
-@import com.act.bbs.model.*;
-@import com.avaje.ebean.*;
-@args String pagename ,String _test,PagedList<BbsTopic> page,Boolean isAdmin
-<style>
+@args PagedList<BbsTopic> page
+    <style>
     .topic{position:relative;width: 100%;overflow: hidden;padding: 10px 0;border-top: 1px solid #ddd}
     .topic>div{float: left;}
     .topic .div1{width: 50px;height: 40px;text-align: center;background-color: #009a61;color: #fff;}
@@ -42,7 +40,7 @@
                 </a>
                 &nbsp;&nbsp;@topic.getCreateTime().format("yyyy年MM月dd日") </div>
             <div>
-                <a href="bbs/topic/@topic.getId()/1">@topic.getContent()</a>&nbsp;&nbsp;<a href="topic/module/@topic.getModuleId()-1">@topic.getModule().getName();
+                <a href="/bbs/topic/@topic.getId()/1">@topic.getContent()</a>&nbsp;&nbsp;<a href="/bbs/module/@topic.getModule().getId()/1">@topic.getModule().getName();
             </a>
             </div>
         </div>

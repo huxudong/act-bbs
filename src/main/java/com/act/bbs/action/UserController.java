@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.osgl.http.H;
 import org.osgl.mvc.annotation.GetAction;
 import org.osgl.mvc.annotation.PostAction;
+import org.osgl.util.IO;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -21,7 +22,7 @@ import java.io.IOException;
  * Created by huxudong on 17/2/24.
  */
 @Controller
-public class UserController extends Controller.Util {
+public class UserController extends BaseController {
 
     @Inject
     private EbeanDao<Integer,BbsUser> userDao;
@@ -91,17 +92,26 @@ public class UserController extends Controller.Util {
     }
 
     @GetAction("/user/authImage")
-    public void authImage() throws IOException {
+    public void authImage() {
         H.Response response = ActionContext.current().resp();
-//        //生成随机字串
+        //生成随机字串
         String verifyCode = VerifyCodeUtils.generateVerifyCode(4);
-        System.out.println(verifyCode);
-//        //删除以前的
+        //删除以前的
         session.remove(CODE_NAME);
         session.put(CODE_NAME, verifyCode.toLowerCase());
-//        //生成图片
+        //生成图片
         int w = 100, h = 30;
-        VerifyCodeUtils.outputImage(w, h, response.outputStream(), verifyCode);
+
+        renderBinary((outputStream) -> {
+            try {
+                VerifyCodeUtils.outputImage(w, h, response.outputStream(), verifyCode);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                IO.close(outputStream);
+            }
+            return null;
+        });
 
     }
 }

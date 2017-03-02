@@ -15,11 +15,9 @@ public class BbsTopic {
 	private Integer emotion ;
 	private Integer isNice ;
 	private Integer isUp ;
-	private Integer moduleId ;
 	private Integer postCount ;
 	private Integer pv ;
 	private Integer replyCount ;
-	private Integer userId ;
 	private String content ;
 	private Date createTime ;
 	@OneToOne
@@ -59,14 +57,6 @@ public class BbsTopic {
 		this.isUp = isUp;
 	}
 
-	public Integer getModuleId() {
-		return moduleId;
-	}
-
-	public void setModuleId(Integer moduleId) {
-		this.moduleId = moduleId;
-	}
-
 	public Integer getPostCount() {
 		return postCount;
 	}
@@ -89,14 +79,6 @@ public class BbsTopic {
 
 	public void setReplyCount(Integer replyCount) {
 		this.replyCount = replyCount;
-	}
-
-	public Integer getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Integer userId) {
-		this.userId = userId;
 	}
 
 	public String getContent() {
