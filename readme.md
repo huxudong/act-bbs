@@ -4,4 +4,18 @@
 
 旨在学习！
 
-版权所有：闲大赋
+## 安装
+
+* jdk8,maven3,mysql
+
+* git clone 
+
+* create database bbs; install mysql from intall-mysql.sql
+
+* import as maven project
+
+* run BBSConfig
+
+* access  http://127.0.0.1:5460,login as admin/123456 or register new user
+
+#版权所有：闲大赋  
