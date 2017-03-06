@@ -59,47 +59,18 @@ public class BBSController extends BaseController {
      */
     @GetAction("/{p}")
     public Result index(Integer p,String keyword) {
-        int limit = 10;
+        int limit = Const.BBS_PAGE_SIZE;
         int offset = (p - 1) * limit;
         if(S.isEmpty(keyword)){
             keyword = "";
         }
-        String sql = "SELECT sum(if(r.`is_sign` = '1',1,0)) sign,\n" +
-                "       sum(if(r.`is_participate` = '1',1,0)) participate,\n" +
-                "       sum(if(r.is_sign = '1',r.sign_numbers,0)) AS piece,\n" +
-                "       sum(if(r.is_sign = '1',r.sign_cost,0)) AS cost,\n" +
-                "       count(1) AS count,\n" +
-                "       a.organ_name,\n" +
-                "       a.area_name,\n" +
-                "       a.dept_name\n" +
-                "FROM t_activity_receipt r,\n" +
-                "\n" +
-                "  ( SELECT activity.id,\n" +
-                "           activity.activity_type,\n" +
-                "           activity.activity_name,\n" +
-                "           userOrg.organ_name,\n" +
-                "           userOrg.area_name,\n" +
-                "           userOrg.dept_name\n" +
-                "   FROM t_activity_release activity,\n" +
-                "\n" +
-                "     (SELECT user.id,\n" +
-                "             user.user_name,\n" +
-                "             area.organ_name,\n" +
-                "             area.area_name,\n" +
-                "             area.dept_name\n" +
-                "      FROM t_user_basic USER,\n" +
-                "                        t_area area\n" +
-                "      WHERE user.group_code = area.group_code ) userOrg\n" +
-                "   WHERE userOrg.id = activity.publisher_id ) a\n" +
-                "WHERE r.activity_id = a.id\n" +
-                "GROUP BY activity_id /* and area.organ_name ='玉溪' */";
         PagedList<BbsTopic> page = topicDao.createQuery().offset(offset).limit(limit).where().like("content","%"+keyword+"%").findPagedList();
         return render(page);
     }
 
     @GetAction("/bbs/topic/{id}/{p}")
     public Result topic( Integer id,  Integer p){
-        int limit = 100;
+        int limit = Const.BBS_PAGE_SIZE;
         int offset = (p - 1) * limit;
         BbsTopic topic = topicDao.findById(id);
         PagedList<BbsPost> page = postDao.createQuery().offset(offset).limit(limit).where().eq("topicId",id).findPagedList();
@@ -184,6 +155,33 @@ public class BBSController extends BaseController {
         }
         PagedList<BbsTopic> page = topicDao.createQuery().offset(offset).limit(limit).where().like("content","%"+keyword+"%").eq("module.id",id).findPagedList();
         return render("com/act/bbs/action/BBSController/index.html",page);
+    }
+
+    @PostAction("/bbs/post/save")
+    public JSONObject savePost(BbsPost post){
+        JSONObject result = new JSONObject();
+        result.put("err", 1);
+        if(post.getContent().length()<10){
+            result.put("msg", "内容太短，请重新编辑！");
+        }else{
+            post.setHasReply(0);
+            post.setCreateTime(new Date());
+            String userName = session.get("userName");
+            Integer userId = Integer.parseInt(session.get("userId"));
+            BbsUser user = userDao.findById(userId);
+            post.setUser(user);
+            postDao.save(post);
+            BbsTopic topic = topicDao.findById(post.getTopicId());
+            int totalPost = topic.getPostCount() + 1;
+            topic.setPostCount(totalPost);
+            topicDao.save(topic);
+
+            int pageSize = Const.BBS_PAGE_SIZE;
+            int page = (totalPost/pageSize)+(totalPost%pageSize==0?0:1);
+            result.put("msg", "/bbs/topic/"+post.getTopicId()+"-"+page+".html");
+            result.put("err", 0);
+        }
+        return result;
     }
 
 

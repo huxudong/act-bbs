@@ -7,7 +7,6 @@ import com.act.bbs.model.BbsUser;
 import com.act.bbs.util.HashKit;
 import com.act.bbs.util.PageUtils;
 import com.act.bbs.util.VerifyCodeUtils;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.osgl.http.H;
@@ -42,7 +41,6 @@ public class UserController extends BaseController {
         }else{
             password = HashKit.md5(password);
             BbsUser user =userDao.findOneBy("userName,password",userName,password);
-            System.out.println(JSON.toJSONString(user));
             if(user==null){
                 result.put("msg","用户不存在");
             }else{

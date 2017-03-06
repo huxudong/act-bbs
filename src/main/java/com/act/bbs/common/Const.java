@@ -10,6 +10,7 @@ public class Const{
     public static final int BBS_POST_SCORE = 3;
     public static final int BBS_REPLAY_SCORE = 3;
 
+    public static final int BBS_PAGE_SIZE = 10;
 
     //level 用户等级
 

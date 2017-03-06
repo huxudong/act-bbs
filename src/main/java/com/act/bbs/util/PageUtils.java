@@ -2,6 +2,7 @@ package com.act.bbs.util;
 
 
 import org.osgl.http.H;
+import org.osgl.util.S;
 
 /**
  * Created by huxudong on 17/2/24.
@@ -16,9 +17,12 @@ public class PageUtils {
      */
     public static String getUrlParams(H.Request request){
         Iterable<String> params = request.paramNames();
-        String urlpara = "?";
+        String urlpara = "";
         for(String param : params){
             urlpara += param + "=" + request.paramVal(param);
+        }
+        if(S.isNotEmpty(urlpara)){
+            urlpara = "?" + urlpara;
         }
         return urlpara;
     }
@@ -31,8 +35,10 @@ public class PageUtils {
      */
     public static String pageUrlPattern(H.Request request,int pageNumber){
         String url = request.path();
-
-        String urlpara = "?" + request.query();
+        String urlpara = "";
+        if(S.isNotEmpty(urlpara)){
+            urlpara = "?" + request.query();
+        }
 
         int index = url.lastIndexOf("/");
 

@@ -33,15 +33,25 @@
             </ul>
             @}
         </div>
-    @}
+    }
+    @include(common.page)
+    @total(page)
 
-
+    @if(userName!=null && !"".equals(userName)){
+    <form id="postForm" action="/bbs/post/save" method="POST"  onsubmit="return ajaxSubmit(this,'reload')">
+        <input type="hidden" name="post.topicId" value="@topic.getId()">
+        <div class="form-group">
+            <textarea id="postContent" name="post.content"></textarea>
+        </div>
+        <button type="submit" class="btn btn-sm btn-primary pull-right"><i class="fa fa-check"></i> 提 交</button>
+    </form>
+    }
 
 <div class="modal fade" id="reply-dialog">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-body">
-                <form class="form-search" action="${ctxPath}/bbs/reply/save" onsubmit="return ajaxSubmit(this,'reload')" >
+                <form class="form-search" action="/bbs/reply/save" onsubmit="return ajaxSubmit(this,'reload')" >
                     <input type="hidden" name="postId" value="${post.id!}"/>
                     <input type="hidden" name="topicId" value="${topic.id!}"/>
                     <div class="form-group">
@@ -68,7 +78,7 @@
     function deletePost(el){
         var p = $(el).parents('.panel-default[data-post]');
         $.confirm('确定要删除该内容吗？',function(e){
-            e&&$.post('${ctxPath}/bbs/admin/post/delete/'+p.data('post'),function(json){
+            e&&$.post('/bbs/admin/post/delete/'+p.data('post'),function(json){
                 json.err?$.alert(json.msg):p.remove();
             })
         })
