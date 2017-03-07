@@ -15,7 +15,7 @@
                     <a class="btn btn-default" href="/bbs/admin/post/edit/@post.getId()"><i class="fa fa-edit"></i> 编辑</a>
                     <a class="btn btn-default" href="javascript:;" onclick="deletePost(this)"><i class="fa fa-trash"></i> 删除</a>
                     @}
-                    <a class="btn btn-default" href="javascript:;" onclick="showReplyDialog('$@post.getId()','@topic.getId()')"><i class="fa fa-reply"></i> 回复</a>
+                    <a class="btn btn-default" href="javascript:;" onclick="showReplyDialog('@post.getId()','@topic.getId()')"><i class="fa fa-reply"></i> 回复</a>
                 </div>
                 @}
             </div>
@@ -52,10 +52,10 @@
         <div class="modal-content">
             <div class="modal-body">
                 <form class="form-search" action="/bbs/reply/save" onsubmit="return ajaxSubmit(this,'reload')" >
-                    <input type="hidden" name="postId" value="${post.id!}"/>
-                    <input type="hidden" name="topicId" value="${topic.id!}"/>
+                    <input type="hidden" name="reply.postId"  id="postId" value=""/>
+                    <input type="hidden" name="reply.topicId" id="topicId" value=""/>
                     <div class="form-group">
-                        <textarea placeholder="请输入回复内容" class="form-control" name="content" style="height:100px;resize:none;" maxlength="100"></textarea>
+                        <textarea placeholder="请输入回复内容" class="form-control" name="reply.content" style="height:100px;resize:none;" maxlength="100"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">确定提交</button>
                 </form>
@@ -69,10 +69,11 @@
 <script>
     hljs.initHighlightingOnLoad();
     function showReplyDialog(postid,topicid){
+        alert(postid)
         var dialog = $('#reply-dialog').modal('show');
         dialog.find('textarea').val('')
-        dialog.find('[name=postId]').val(postid);
-        dialog.find('[name=topicId]').val(topicid);
+        dialog.find('[id=postId]').val(postid);
+        dialog.find('[id=topicId]').val(topicid);
     }
 
     function deletePost(el){

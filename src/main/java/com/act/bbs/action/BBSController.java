@@ -184,6 +184,39 @@ public class BBSController extends BaseController {
         return result;
     }
 
+    /**
+     * 回复评论改为Ajax方式提升体验
+     * @param reply
+     * @return
+     */
+    @PostAction("/bbs/reply/save")
+    public JSONObject saveReply(BbsReply reply){
+        JSONObject result = new JSONObject();
+        result.put("err", 1);
+        result.put("err", 1);
+        String userName = session.get("userName");
+        Integer userId = Integer.parseInt(session.get("userId"));
+        BbsUser user = userDao.findById(userId);
+
+        if(S.isEmpty(userName)){
+            result.put("msg", "请先登录后再继续！");
+        }else if(reply.getContent().length()<10){
+            result.put("msg", "回复内容太短，请修改!");
+        }else{
+            reply.setUserId(user.getId());
+            reply.setPostId(reply.getPostId());
+            reply.setCreateTime(new Date());
+            replyDao.save(reply);
+            reply.setUser(user);
+            reply.setUser(user);
+            result.put("msg", "评论成功！");
+            result.put("err", 0);
+
+            BbsTopic topic = topicDao.findById(reply.getTopicId());
+        }
+        return result;
+    }
+
 
 
     @GetAction("/list")
