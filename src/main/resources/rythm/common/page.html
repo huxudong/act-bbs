@@ -6,11 +6,13 @@
     <ul class="pagination">
         <!--小于10页直接全部输出-->
         @if(query.getTotalPageCount()<=10){
-            @for(int i = 1 ; i < query.getTotalPageCount()+1; ++i ){
-                    @{
-                        String url = PageUtils.pageUrlPattern(_action.req(),i);
-                    }
-                    <li class="@if(i==query.getPageIndex()+1){active}"><a href="@url">@i</a></li>
+            @if(query.getTotalPageCount() > 1){
+                @for(int i = 1 ; i < query.getTotalPageCount()+1; ++i ){
+                        @{
+                            String url = PageUtils.pageUrlPattern(_action.req(),i);
+                        }
+                        <li class="@if(i==query.getPageIndex()+1){active}"><a href="@url">@i</a></li>
+                }
             }
         }else{
             @{
