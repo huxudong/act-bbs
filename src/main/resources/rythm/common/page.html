@@ -5,7 +5,7 @@
 
     <ul class="pagination">
         <!--小于10页直接全部输出-->
-        @if(query.getTotalPageCount() > 1 && query.getTotalPageCount()<=10){
+        @if(query.getTotalPageCount()<=10){
             @for(int i = 1 ; i < query.getTotalPageCount()+1; ++i ){
                     @{
                         String url = PageUtils.pageUrlPattern(_action.req(),i);
