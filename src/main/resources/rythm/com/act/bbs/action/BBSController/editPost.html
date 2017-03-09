@@ -1,0 +1,13 @@
+@extends(common.layout)
+@args BbsPost post , BbsTopic topic
+<form action="/bbs/admin/post/update" method="post" onsubmit="return ajaxSubmit(this)">
+	<input type="hidden" name="id" value="@post.getId()"/>
+	<h3>主题：@topic.getContent()</h3>
+	<div class="form-group">
+		<textarea id="postContent" name="content">@post.getContent()</textarea>
+	</div>
+	<div class="btn-group pull-right">
+		<button class="btn btn-sm btn-primary submit-btn"  type="submit"><i class="fa fa-check"></i> 提交</button>
+		<button class="btn btn-sm btn-default preview-btn" onclick="preview()" type="button"><i class="fa fa-eye"></i> 预览</button>
+	</div>
+</form>

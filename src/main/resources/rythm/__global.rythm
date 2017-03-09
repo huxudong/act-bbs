@@ -1,5 +1,6 @@
 @import com.act.bbs.model.*;
 @import com.avaje.ebean.*;
+
 @args String pagename ,List<BbsModule> moduleList
 
 @args String userName, String userId,String level,String score,Boolean isAdmin

@@ -1,14 +1,12 @@
 @extends(common.layout)
-@import com.act.bbs.model.*;
-@import com.avaje.ebean.*;
-@args BbsTopic topic,Boolean isAdmin,PagedList<BbsReply> page
+@args BbsTopic topic,Boolean isAdmin,PagedList<BbsReply> page,Integer pv
 <h3>主题：@topic.getContent()</h3>
     @for(BbsPost post : page.getList()){
-        <div class="panel panel-default" data-post="${post.id}">
+        <div class="panel panel-default" data-post="@post.getId()">
             <div class="panel-heading">
                 <span class="label label-primary">@post.getUser().getUserName()</span>
                 <span class="label label-default">@post.getCreateTime().format("yyyy年MM月dd日")</span>
-                <!--<span class="label label-default">@topic.getPv()</span>-->
+                <!--<span class="label label-default">@pv</span>-->
                 @if(userName !=null){
                 <div class="btn-group btn-group-xs pull-right">
                     @if(Integer.parseInt(userId) == post.getUser().getId()||isAdmin){
@@ -52,8 +50,8 @@
         <div class="modal-content">
             <div class="modal-body">
                 <form class="form-search" action="/bbs/reply/save" onsubmit="return ajaxSubmit(this,'reload')" >
-                    <input type="hidden" name="reply.postId"  id="postId" value=""/>
-                    <input type="hidden" name="reply.topicId" id="topicId" value=""/>
+                    <input type="hidden" name="reply.post.id"  id="postId" value=""/>
+                    <input type="hidden" name="reply.topic.id" id="topicId" value=""/>
                     <div class="form-group">
                         <textarea placeholder="请输入回复内容" class="form-control" name="reply.content" style="height:100px;resize:none;" maxlength="100"></textarea>
                     </div>
@@ -69,7 +67,6 @@
 <script>
     hljs.initHighlightingOnLoad();
     function showReplyDialog(postid,topicid){
-        alert(postid)
         var dialog = $('#reply-dialog').modal('show');
         dialog.find('textarea').val('')
         dialog.find('[id=postId]').val(postid);

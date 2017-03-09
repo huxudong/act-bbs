@@ -12,9 +12,10 @@ import java.util.Date;
 public class BbsReply {
 	@Id
 	private Integer id ;
-	private Integer postId ;
-	private Integer topicId ;
-	private Integer userId ;
+
+	@ManyToOne
+	private BbsPost post ;
+
 	private String content ;
 	private Date createTime ;
 	@OneToOne
@@ -31,28 +32,12 @@ public class BbsReply {
 		this.id = id;
 	}
 
-	public Integer getPostId() {
-		return postId;
+	public BbsPost getPost() {
+		return post;
 	}
 
-	public void setPostId(Integer postId) {
-		this.postId = postId;
-	}
-
-	public Integer getTopicId() {
-		return topicId;
-	}
-
-	public void setTopicId(Integer topicId) {
-		this.topicId = topicId;
-	}
-
-	public Integer getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setPost(BbsPost post) {
+		this.post = post;
 	}
 
 	public String getContent() {

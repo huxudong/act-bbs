@@ -14,6 +14,8 @@ import org.osgl.mvc.result.Result;
 import org.osgl.util.S;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 /**
@@ -74,7 +76,10 @@ public class BBSController extends BaseController {
         int offset = (p - 1) * limit;
         BbsTopic topic = topicDao.findById(id);
         PagedList<BbsPost> page = postDao.createQuery().offset(offset).limit(limit).where().eq("topicId",id).findPagedList();
-        return render(topic,page);
+        topic.setPv(topic.getPv() + 1);
+        topicDao.save(topic);
+        Integer pv = topic.getPv();
+        return render(topic,page,pv);
     }
 
     @PostAction("/bbs/topic/save")
@@ -203,20 +208,82 @@ public class BBSController extends BaseController {
         }else if(reply.getContent().length()<10){
             result.put("msg", "回复内容太短，请修改!");
         }else{
-            reply.setUserId(user.getId());
-            reply.setPostId(reply.getPostId());
+            BbsTopic topic = topicDao.findById(reply.getTopic().getId());
             reply.setCreateTime(new Date());
+            reply.setUser(user);
+            reply.setTopic(topic);
             replyDao.save(reply);
-            reply.setUser(user);
-            reply.setUser(user);
             result.put("msg", "评论成功！");
             result.put("err", 0);
-
-            BbsTopic topic = topicDao.findById(reply.getTopicId());
         }
         return result;
     }
 
+
+
+    @GetAction("/bbs/admin/post/edit/{id}")
+    public Result editPost( Integer id){
+        BbsPost post =  postDao.findById(id);
+        BbsTopic topic = topicDao.findById(post.getTopicId());
+        return render(topic , post);
+    }
+
+    @PostAction("/bbs/admin/post/update")
+    public JSONObject updatePost(Integer id , String content , HttpServletRequest request, HttpServletResponse response){
+        JSONObject result = new JSONObject();
+        result.put("err", 1);
+        if(content.length()<10){
+            result.put("msg", "输入的内容太短，请重新编辑！");
+        }else{
+            BbsPost db = postDao.findById(id);
+            if(canUpdatePost(db)){
+                db.setContent(content);
+                postDao.save(db);
+                result.put("msg", "/bbs/topic/"+db.getTopicId()+"/1");
+                result.put("err", 0);
+            }else{
+                result.put("msg", "不是自己发表的内容无法编辑！");
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     * ajax方式删除内容
+     * @return
+     */
+
+    @PostAction("/bbs/admin/post/delete/{id}")
+    public JSONObject deletePost(Integer id){
+        JSONObject result = new JSONObject();
+        BbsPost post = postDao.findById(id);
+        if(canUpdatePost(post)){
+            postDao.delete(post);
+            result.put("err", 0);
+            result.put("msg", "删 除成功！");
+        }else{
+            result.put("err", 1);
+            result.put("msg", "不是自己发表的内容无法删除！");
+        }
+        return result;
+    }
+
+
+    private boolean canUpdatePost(BbsPost post){
+
+        Integer userId = Integer.parseInt(session.get("userId"));
+        BbsUser user = userDao.findById(userId);
+        if(post.getUser().getId() == user.getId()){
+            return true ;
+        }
+        //如果是admin
+        if(user.getUserName().equals("admin")){
+            return true;
+        }
+
+        return false;
+    }
 
 
     @GetAction("/list")
