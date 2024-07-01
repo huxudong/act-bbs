@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: org.osgl:osgl-http:0.5.0-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Documents/repo/org/osgl/osgl-http/0.5.0-SNAPSHOT/osgl-http-0.5.0-20170228.051027-7.jar!/" />
+      <root url="jar://$USER_HOME$/Documents/repo/org/osgl/osgl-http/0.5.0-SNAPSHOT/osgl-http-0.5.0-20170302.094835-9.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$USER_HOME$/Documents/repo/org/osgl/osgl-http/0.5.0-SNAPSHOT/osgl-http-0.5.0-20170228.051027-7-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/Documents/repo/org/osgl/osgl-http/0.5.0-SNAPSHOT/osgl-http-0.5.0-20170302.094835-9-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$USER_HOME$/Documents/repo/org/osgl/osgl-http/0.5.0-SNAPSHOT/osgl-http-0.5.0-20170228.051027-7-sources.jar!/" />
+      <root url="jar://$USER_HOME$/Documents/repo/org/osgl/osgl-http/0.5.0-SNAPSHOT/osgl-http-0.5.0-20170302.094835-9-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

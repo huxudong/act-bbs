@@ -5,6 +5,7 @@ import act.controller.Controller;
 import act.db.ebean.EbeanDao;
 import com.act.bbs.model.BbsModule;
 import org.osgl.mvc.annotation.Before;
+import org.osgl.mvc.annotation.GetAction;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -20,6 +21,10 @@ public class BaseController extends Controller.Util {
 
     private static String PAGENAME;
 
+    @GetAction("/me")
+    public String me(){
+        return "me";
+    }
 
 
     @Before

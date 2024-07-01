@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ACT 论坛</title>
-    <link rel="icon" href="asset/act.png" type="image/x-icon" />
+    <!--<link rel="icon" href="asset/act.png" type="image/x-icon" />-->
     <meta name="keywords" content="ACT-FrameWork">
     <meta name="description" content="论坛模板">
 
@@ -65,7 +65,7 @@
                 }else{
                     <li><a href="/bbs/topic/post"><i class="fa fa-plus"></i> 发帖</a></li>
                     <li class="dropdown">
-                        @{Integer mcount = 22}
+                        @{Integer mcount = 0}
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user-circle-o"></i>
                             @userName @if(mcount > 0){<span class="badge mcount">@mcount</span>}
                             <span class="caret"></span></a>

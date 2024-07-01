@@ -54,6 +54,23 @@ public class BBSController extends BaseController {
         return redirect("/1");
     }
 
+
+    /**
+     * index page
+     * @param p
+     * @return
+     */
+    @GetAction("pagelist/{p}")
+    public PagedList<BbsTopic> pagelist(Integer p,String keyword) {
+        int limit = Const.BBS_PAGE_SIZE;
+        int offset = (p - 1) * limit;
+        if(S.isEmpty(keyword)){
+            keyword = "";
+        }
+        PagedList<BbsTopic> page = topicDao.createQuery().offset(offset).limit(limit).where().like("content","%"+keyword+"%").findPagedList();
+        return page;
+    }
+
     /**
      * index page
      * @param p
