@@ -1,6 +1,6 @@
 #act-bbs(act-framework,rythm,ebean)
     
-本论坛是从beetl、beetlsql的作者闲大赋beetl-bbs(springmvc,beetl,beetlsql)迁移而来.
+本论坛是基于beetl-bbs(springmvc,beetl,beetlsql)，使用act-framework重构.
 
 旨在学习！
 
